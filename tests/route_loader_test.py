@@ -57,7 +57,7 @@ class RouteLoaderTest(unittest.TestCase):
         self.assert_route(self.loader.get_route('/test3/sub-path'), '/test3/sub-path', 203, {'hello3': 'world'})
 
     def test_load_from_json(self):
-        self.load_routes_from_file('test.json')
+        self.load_routes_from_file('./tests/test.json')
         self.assertEqual(2, len(self.loader.routes))
         self.assert_route(self.loader.get_route('/test2'), '/test2', 202, {'hello': 'world'})
         self.assert_route(self.loader.get_route('/test3/sub-path'), '/test3/sub-path', 203, {'hello': 'world3'})

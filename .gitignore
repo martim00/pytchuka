@@ -1,2 +1,8 @@
 .venv
+.cache
+.tox
 .idea
+*.pyc
+*.egg-info
+/build
+/dist
