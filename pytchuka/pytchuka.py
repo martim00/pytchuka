@@ -12,22 +12,25 @@ class BlackHoleMiddleware(object):
         self.route_loader = loader
 
     def process_response(self, req, resp, resource, req_succeeded):
-        route = self.route_loader.get_route(req.path)
-        req_succeeded = True
-        if route:
-            resp.body = json.dumps(route['body'])
-            resp.status = falcon.get_http_status(route['status'])
-        else:
-            resp.body = ''
-            resp.status = falcon.get_http_status(200)
+        route = self.route_loader.match_route(req.path)
+        assert route is not None
+        resp.body = json.dumps(route['body'])
+        resp.status = falcon.get_http_status(route['status'])
 
 
-def run_server(port, spec):
+def create_app(loader):
+    return falcon.API(middleware=[BlackHoleMiddleware(loader)])
+
+
+def create_app_from_file(spec):
     route_loader = RouteLoader()
     if spec:
         route_loader.load_from_file(spec)
-    app = falcon.API(middleware=[BlackHoleMiddleware(route_loader)])
+    return create_app(route_loader)
 
+
+def run_server(port, spec):
+    app = create_app_from_file(spec)
     httpd = make_server('', port, app)
 
     if not spec:

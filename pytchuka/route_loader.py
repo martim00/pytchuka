@@ -1,4 +1,5 @@
 import json
+import re
 
 from marshmallow import Schema
 from marshmallow import fields
@@ -26,4 +27,11 @@ class RouteLoader:
 
     def get_route(self, url):
         return self.routes.get(url, None)
+
+    def match_route(self, url):
+        for key, value in self.routes.items():
+            if re.match(key, url):
+                return value
+
+        return {'url': url, 'status': 200, 'body': {}}
 

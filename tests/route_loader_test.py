@@ -26,7 +26,7 @@ class RouteLoaderTest(unittest.TestCase):
         ]
         self.load_routes(route)
         self.assertEqual(1, len(self.loader.routes))
-        self.assert_route(self.loader.get_route('/test'), '/test', 200, {'hello': 'world'})
+        self.assert_route(self.loader.match_route('/test'), '/test', 200, {'hello': 'world'})
 
     def assert_route(self, route, expected_url, expected_status, expected_body):
         self.assertIsNotNone(route)
@@ -53,11 +53,30 @@ class RouteLoaderTest(unittest.TestCase):
         ]
         self.load_routes(route)
         self.assertEqual(2, len(self.loader.routes))
-        self.assert_route(self.loader.get_route('/test2'), '/test2', 202, {'hello2': 'world'})
-        self.assert_route(self.loader.get_route('/test3/sub-path'), '/test3/sub-path', 203, {'hello3': 'world'})
+        self.assert_route(self.loader.match_route('/test2'), '/test2', 202, {'hello2': 'world'})
+        self.assert_route(self.loader.match_route('/test3/sub-path'), '/test3/sub-path', 203, {'hello3': 'world'})
 
     def test_load_from_json(self):
         self.load_routes_from_file('./tests/test.json')
         self.assertEqual(2, len(self.loader.routes))
-        self.assert_route(self.loader.get_route('/test2'), '/test2', 202, {'hello': 'world'})
-        self.assert_route(self.loader.get_route('/test3/sub-path'), '/test3/sub-path', 203, {'hello': 'world3'})
+        self.assert_route(self.loader.match_route('/test2'), '/test2', 202, {'hello': 'world'})
+        self.assert_route(self.loader.match_route('/test3/sub-path'), '/test3/sub-path', 203, {'hello': 'world3'})
+
+    def test_router_return_default_value_if_none_is_matched(self):
+        self.assert_route(self.loader.match_route('/skjandkasn'), '/skjandkasn', 200, {})
+
+    def test_should_be_able_to_pass_regex_as_urls(self):
+        route = [
+            {
+                'url': '/test/*',
+                'status': 200,
+                'body': {
+                    'hello': 'world'
+                }
+            }
+        ]
+        self.load_routes(route)
+        self.assert_route(self.loader.match_route('/test/'), '/test/*', 200, {'hello': 'world'})
+        self.assert_route(self.loader.match_route('/test/saa'), '/test/*', 200, {'hello': 'world'})
+        self.assert_route(self.loader.match_route('/test'), '/test/*', 200, {'hello': 'world'})
+        self.assert_route(self.loader.match_route('/test/3211/321'), '/test/*', 200, {'hello': 'world'})
