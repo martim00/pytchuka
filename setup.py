@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="pytchuka",
-    version="0.0.4",
+    version="0.0.5",
     author="",
     author_email="",
     install_requires=["marshmallow", "falcon"],
