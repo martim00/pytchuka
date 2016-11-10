@@ -2,6 +2,7 @@
     {
         "url": "/test2",
         "status": 202,
+        "method": "GET",
         "body": {
             "hello" : "world"
         }
@@ -9,6 +10,7 @@
     {
         "url": "/test3/sub-path",
         "status": 203,
+        "method": "POST",
         "body": {
             "hello" : "world3"
         }

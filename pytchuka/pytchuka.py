@@ -12,7 +12,7 @@ class BlackHoleMiddleware(object):
         self.route_loader = loader
 
     def process_response(self, req, resp, resource, req_succeeded):
-        route = self.route_loader.match_route(req.path)
+        route = self.route_loader.match_route(req.path, req.method)
         assert route is not None
         resp.body = json.dumps(route['body'])
         resp.status = falcon.get_http_status(route['status'])

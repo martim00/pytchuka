@@ -16,6 +16,7 @@ class ServerTest(testing.TestCase):
             {
                 'url': '/test',
                 'status': 200,
+                'method': 'GET',
                 'body': {
                     'hello': 'world'
                 }
@@ -36,6 +37,7 @@ class ServerTest(testing.TestCase):
             {
                 'url': '/test/*',
                 'status': 200,
+                'method': 'GET',
                 'body': {
                     'hello': 'world'
                 }
