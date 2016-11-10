@@ -13,17 +13,31 @@ class RouteSchema(Schema):
 
 
 class RouteLoader:
-    def __init__(self):
+    def __init__(self, spec="", live_reload=False):
         self.routes = {}
+        self.live_reload = live_reload
+        self.spec = spec
+        self.reload()
 
     def load_from_file(self, filename):
+        assert filename
+
         with open(filename, 'r') as file:
             self.load_routes(json.load(file))
 
     def load_routes(self, routes):
         self.routes = RouteSchema(many=True).load(routes).data
 
+    def reload(self):
+        if self.spec:
+            self.load_from_file(self.spec)
+
     def match_route(self, url, method):
+
+        # we are reloading to improve usability (we know the performance degradation here)
+        if self.live_reload:
+            self.reload()
+
         for route in self.routes:
             if re.match(route['url'], url) and route['method'] == method:
                 return route

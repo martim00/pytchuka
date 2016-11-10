@@ -1,17 +1,17 @@
 import unittest
+from unittest.mock import MagicMock
 
 from pytchuka.route_loader import RouteLoader
 
 
 class RouteLoaderTest(unittest.TestCase):
 
-    def setUp(self):
-        self.loader = RouteLoader()
-
     def load_routes(self, routes):
+        self.loader = RouteLoader()
         self.loader.load_routes(routes)
 
-    def load_routes_from_file(self, json_file):
+    def load_routes_from_file(self, json_file, live_reload=False):
+        self.loader = RouteLoader(live_reload=live_reload)
         self.loader.load_from_file(json_file)
 
     def test_load_route(self):
@@ -68,6 +68,7 @@ class RouteLoaderTest(unittest.TestCase):
                           '/test3/sub-path', 203, {'hello': 'world3'})
 
     def test_router_return_default_value_if_none_is_matched(self):
+        self.load_routes({})
         self.assert_route(self.loader.match_route('/skjandkasn', 'GET'), '/skjandkasn', 200, {})
 
     def test_should_be_able_to_pass_regex_as_urls(self):
@@ -109,3 +110,10 @@ class RouteLoaderTest(unittest.TestCase):
         self.load_routes(route)
         self.assert_route(self.loader.match_route('/test/', 'GET'), '/test/*', 200, {'method': 'get'})
         self.assert_route(self.loader.match_route('/test/', 'POST'), '/test/*', 201, {'method': 'post'})
+
+    def test_on_live_reload_mode_the_routes_are_dinamically_loaded(self):
+        self.load_routes_from_file('./tests/test.json', True)
+        self.loader.reload = MagicMock()
+        self.loader.match_route('/test', 'GET')
+
+        self.assertEqual(1, self.loader.reload.call_count)

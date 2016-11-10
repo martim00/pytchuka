@@ -22,15 +22,14 @@ def create_app(loader):
     return falcon.API(middleware=[BlackHoleMiddleware(loader)])
 
 
-def create_app_from_file(spec):
-    route_loader = RouteLoader()
-    if spec:
-        route_loader.load_from_file(spec)
+def create_app_from_file(spec, live_reload):
+    route_loader = RouteLoader(spec, live_reload)
     return create_app(route_loader)
 
 
-def run_server(port, spec):
-    app = create_app_from_file(spec)
+def run_server(port, spec, live_reload):
+    live_reload = live_reload if live_reload else True
+    app = create_app_from_file(spec, live_reload)
     httpd = make_server('', port, app)
 
     if not spec:
@@ -46,13 +45,14 @@ def run_server(port, spec):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Very very simple python mock server')
+    parser = argparse.ArgumentParser(description='Very simple python mock server')
     parser.add_argument('port', type=int, help='The port to run.')
     parser.add_argument('--spec', type=str, help='The json file with the spec of paths to mock. '
-                                                 'If not passed will accept any path')
+                                                 'If not passed will accept any path.')
+    parser.add_argument('--live', type=bool, help='Live reload mode. By default is enabled')
 
     args = parser.parse_args()
-    run_server(args.port, args.spec)
+    run_server(args.port, args.spec, args.live)
 
 if __name__ == '__main__':
     main()
