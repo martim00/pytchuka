@@ -14,11 +14,15 @@ class ServerTest(testing.TestCase):
     def test_get_correct_body(self):
         route = [
             {
-                'url': '/test',
-                'status': 200,
-                'method': 'GET',
-                'body': {
-                    'hello': 'world'
+                'request': {
+                    'url': '/test',
+                    'method': 'GET',
+                },
+                'response': {
+                    'status': 200,
+                    'body': {
+                        'hello': 'world'
+                    }
                 }
             }
         ]
@@ -35,11 +39,15 @@ class ServerTest(testing.TestCase):
     def test_define_route_regex(self):
         route = [
             {
-                'url': '/test/*',
-                'status': 200,
-                'method': 'GET',
-                'body': {
-                    'hello': 'world'
+                'request': {
+                    'url': '/test/*',
+                    'method': 'GET',
+                },
+                'response': {
+                    'status': 200,
+                    'body': {
+                        'hello': 'world'
+                    }
                 }
             }
         ]
