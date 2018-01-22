@@ -2,10 +2,10 @@ from setuptools import setup
 
 setup(
     name="pytchuka",
-    version="0.0.5",
+    version="0.0.6",
     author="",
     author_email="",
-    install_requires=["marshmallow", "falcon"],
+    install_requires=["marshmallow", "falcon", "falcon-multipart"],
     description="A very simple http mock server",
     license="MIT",
     keywords="mock server http",

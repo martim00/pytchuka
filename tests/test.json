@@ -1,18 +1,70 @@
 [
     {
-        "url": "/test2",
-        "status": 202,
-        "method": "GET",
-        "body": {
-            "hello" : "world"
+        "request": {
+            "url": "/test2",
+            "method": "GET"
+        },
+        "response": {
+            "status": 202,
+            "body": {
+                "hello": "world"
+            }
         }
     },
     {
-        "url": "/test3/sub-path",
-        "status": 203,
-        "method": "POST",
-        "body": {
-            "hello" : "world3"
+        "request": {
+            "url": "/test3/sub-path",
+            "method": "POST"
+        },
+        "response": {
+            "status": 203,
+            "body": {
+                "hello": "world3"
+            }
+        }
+    },
+    {
+        "request": {
+            "url": "/test3/sub-path",
+            "query_string": "id=1234&file=C:%5CTmp%5Cblue.txt",
+            "method": "POST"
+        },
+        "response": {
+            "status": 200,
+            "body": {
+                "hello": "Test Quey Param"
+            }
+        }
+    },
+    {
+        "request": {
+            "url": "/test3/sub-path",
+            "file_upload": {
+                "key": "key name",
+                "filename": "my personal file_tabajara"
+            },
+            "method": "POST"
+        },
+        "response": {
+            "status": 201,
+            "body": {
+                "hello": "Test File Upload"
+            }
+        }
+    },
+    {
+        "request": {
+            "url": "/test3/sub-path",
+            "method": "POST",
+            "body": {
+                "name": "Baltazar"
+            }
+        },
+        "response": {
+            "status": 201,
+            "body": {
+                "hello": "Hello Baltazar!!"
+            }
         }
     }
 ]
