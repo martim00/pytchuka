@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="pytchuka",
-    version="0.0.6",
+    version="0.0.7",
     author="",
     author_email="",
     install_requires=["marshmallow", "falcon", "falcon-multipart"],
@@ -17,7 +17,7 @@ setup(
         ],
     },
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Alpha",
         "Topic :: Utilities",
         "License :: OSI Approved :: MIT License",
     ],

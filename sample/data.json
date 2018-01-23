@@ -1,0 +1,110 @@
+[
+    {
+        "request": {
+            "url": "/test/chris",
+            "method": "GET"
+        },
+        "response": {
+            "status": 200,
+            "body": {
+                "greetings": "hello chris"
+            }
+        }
+    },
+    {
+        "request": {
+            "url": "/test/*",
+            "method": "GET"
+        },
+        "response": {
+            "status": 200,
+            "body": {
+                "greetings": "hello folks"
+            }
+        }
+    },
+    {
+        "request": {
+            "url": "/test",
+            "method": "GET",
+            "query_string": "name=Nemo"
+        },
+        "response": {
+            "status": 200,
+            "body": {
+                "greetings": "hello Nemo"
+            }
+        }
+    },
+    {
+        "request": {
+            "url": "/test",
+            "method": "GET",
+            "query_string": "name=Goku"
+        },
+        "response": {
+            "status": 200,
+            "body": {
+                "greetings": "hello Goku"
+            }
+        }
+    },
+    {
+        "request": {
+            "url": "/test",
+            "method": "POST"
+        },
+        "response": {
+            "status": 201,
+            "body": {
+                "greetings": "hello world"
+            }
+        }
+    },
+    {
+        "request": {
+            "url": "/test",
+            "method": "POST",
+            "body": {
+                "name": "Lightning McQueen"
+            }
+        },
+        "response": {
+            "status": 201,
+            "body": {
+                "greetings": "hello Lightning McQueen"
+            }
+        }
+    },
+    {
+        "request": {
+            "url": "/test",
+            "method": "POST",
+            "body": {
+                "name": "Emmanuelle"
+            }
+        },
+        "response": {
+            "status": 201,
+            "body": {
+                "greetings": "hello Emmanuelle"
+            }
+        }
+    },
+    {
+        "request": {
+            "url": "/test",
+            "method": "POST",
+            "file_upload": {
+				"key": "myfile",
+				"filename": "fake_file.txt"
+			}
+        },
+        "response": {
+            "status": 201,
+            "body": {
+                "greetings": "hello Fake File"
+            }
+        }
+    }
+]

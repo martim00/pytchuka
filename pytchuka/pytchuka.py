@@ -68,7 +68,7 @@ class RouteLoader:
             request = route['request']
             if re.match(request['url'], url) and \
                     request['method'] == method and \
-                    re.match(request.get('query_string', ''), query_string) and \
+                    request.get('query_string', '') == query_string and \
                     request.get('body', {}) == body and \
                     request.get('file_upload', {}) == file_upload:
                 return route['response']
