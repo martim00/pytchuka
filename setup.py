@@ -5,7 +5,7 @@ setup(
     version="0.0.7",
     author="",
     author_email="",
-    install_requires=["marshmallow", "falcon", "falcon-multipart"],
+    install_requires=["marshmallow==3.3.0", "falcon==2.0.0", "falcon-multipart==0.2.0"],
     description="A very simple http mock server",
     license="MIT",
     keywords="mock server http",
