@@ -46,7 +46,8 @@ The body is when you have cases with different returns based on body data (POST,
             "url": "/test/sub-path",
             "method": "POST",
             "body" : {
-                "name": "Name1"
+                "name": "Name1",
+                "city": "Kansas"
             }
         },
         "response": {
@@ -61,7 +62,8 @@ The body is when you have cases with different returns based on body data (POST,
             "url": "/test/sub-path",
             "method": "POST",
             "body" : {
-                "name": "Name2"
+                "name": "Name2",
+                "city": "*"
             }
         },
         "response": {
@@ -73,7 +75,8 @@ The body is when you have cases with different returns based on body data (POST,
     }
 ]
 ```
-
+It's possible to accept any value for a field using "\*" as the value.
+  
 The query_string is the same idea of the body.
 
 ```json

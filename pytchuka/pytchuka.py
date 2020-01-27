@@ -3,6 +3,7 @@ import json
 from wsgiref import simple_server
 
 import falcon
+from deepdiff import DeepDiff
 from falcon_multipart.middleware import MultipartMiddleware
 from falcon_multipart.parser import Parser
 
@@ -64,12 +65,28 @@ class RouteLoader:
             if re.match(request['url'], url) and \
                     request['method'] == method and \
                     request.get('query_string', '') == query_string and \
-                    request.get('body', {}) == body and \
+                    self.is_body_equals(request.get('body', {}), body) and \
                     request.get('file_upload', {}) == file_upload:
                 return route['response']
 
         # default route
         return {'status': 200, 'body': {}}
+
+    @staticmethod
+    def is_body_equals(r_body, body):
+        if not r_body:
+            return True
+        diff = DeepDiff(r_body, body, verbose_level=1, ignore_order=True)
+        if not diff:
+            return True
+        if diff.get('dictionary_item_added', []):
+            return False
+        if diff.get('dictionary_item_removed', []):
+            return False
+        for _, v in diff.get('values_changed', {}).items():
+            if v.get('old_value', '') != '*':
+                return False
+        return True
 
 
 class BlackHoleMiddleware(object):
