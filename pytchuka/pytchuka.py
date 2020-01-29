@@ -1,8 +1,9 @@
 import argparse
 import json
-from wsgiref.simple_server import make_server
+from wsgiref import simple_server
 
 import falcon
+from deepdiff import DeepDiff
 from falcon_multipart.middleware import MultipartMiddleware
 from falcon_multipart.parser import Parser
 
@@ -45,12 +46,7 @@ class RouteLoader:
 
     def load_routes(self, routes):
         try:
-            self.routes, errors = RouteSchema(many=True).load(routes)
-            if errors:
-                print('Error loading routes. \nMessages: {0}'.format(errors))
-                self.routes = []
-                return
-
+            self.routes = RouteSchema(many=True).load(routes)
             self.routes = [route for route in self.routes if route]
         except ValidationError as e:
             print('Unexpected errors loading routes. \nFields: {0}\nMessages: {1}'.format(e.fields, e.messages))
@@ -69,12 +65,28 @@ class RouteLoader:
             if re.match(request['url'], url) and \
                     request['method'] == method and \
                     request.get('query_string', '') == query_string and \
-                    request.get('body', {}) == body and \
+                    self.is_body_equals(request.get('body', {}), body) and \
                     request.get('file_upload', {}) == file_upload:
                 return route['response']
 
         # default route
         return {'status': 200, 'body': {}}
+
+    @staticmethod
+    def is_body_equals(r_body, body):
+        if not r_body:
+            return True
+        diff = DeepDiff(r_body, body, verbose_level=1, ignore_order=True)
+        if not diff:
+            return True
+        if diff.get('dictionary_item_added', []):
+            return False
+        if diff.get('dictionary_item_removed', []):
+            return False
+        for _, v in diff.get('values_changed', {}).items():
+            if v.get('old_value', '') != '*':
+                return False
+        return True
 
 
 class BlackHoleMiddleware(object):
@@ -109,31 +121,15 @@ def create_app_from_file(spec, live_reload):
 def run_server(port, spec, live_reload):
     live_reload = live_reload if live_reload else True
     app = create_app_from_file(spec, live_reload)
-    httpd = make_server('', port, app)
+    httpd = simple_server.make_server('', port, app)
 
     if not spec:
         print('Spec file not found. Accepting all routes (blackhole mode on).')
     else:
         print('Spec file: {}'.format(spec))
-    print('\nPytchuka is...')
-    print("                        ,////,")
-    print("                        /// 6|")
-    print("                        //  _|")
-    print("                       _/_,-'")
-    print("                  _.-/'/   \   ,/;,")
-    print("               ,-' /'  \_   \ / _/")
-    print("               `\ /     _/\  ` /")
-    print("                 |     /,  `\_/")
-    print("                 |     \'")
-    print(" pb  /\_        /`      /\"")
-    print("   /' /_``--.__/\  `,. /  \"")
-    print("  |_/`  `-._     `\/  `\   `.")
-    print("            `-.__/'     `\   |")
-    print("                          `\  \"")
-    print("                            `\ \"")
-    print("                              \_\__")
-    print("                               \___)")
-    print('\nServer address: http://{0}:{1}\n'.format(httpd.server_name, httpd.server_port))
+
+    address, port = httpd.server_address
+    print(f'Pytchuka is running\nServer address: http://{address}:{port}\n')
 
     try:
         httpd.serve_forever()
